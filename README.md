@@ -60,6 +60,23 @@ npm run dev
 
 프론트엔드 기본 주소는 `http://localhost:5173` 입니다. 로컬 기본 포트로 실행하려면 `frontend/.env`의 `VITE_API_BASE_URL`을 `http://localhost:8000/api`로 맞추세요.
 
+
+## 통합 서버 실행 스크립트
+
+JAsset과 동일하게 한 번의 명령으로 PostgreSQL, 백엔드, 프론트엔드 개발 서버를 함께 구동할 수 있는 스크립트를 제공합니다. 스크립트는 필요한 `.env` 파일이 없을 때 예시 파일로 생성하고, PostgreSQL 시작, 백엔드 의존성 설치, Alembic 마이그레이션, 프론트엔드 의존성 설치 후 서버를 실행합니다.
+
+```bash
+./utils/run_server.sh
+```
+
+기본 포트는 JAsset과 함께 실행하기 위한 공존 예시 값인 백엔드 `18000`, 프론트엔드 `15173`을 사용합니다. 스크립트는 실행 시 `CORS_ORIGINS`와 `VITE_API_BASE_URL` 기본값도 해당 포트에 맞춰 주며, 포트를 바꿔야 한다면 환경 변수로 덮어쓸 수 있습니다.
+
+```bash
+BACKEND_PORT=18001 FRONTEND_PORT=15174 ./utils/run_server.sh
+```
+
+스크립트 실행 전 루트 `.env`, `backend/.env`, `frontend/.env`를 직접 만들어 둔 경우 기존 파일은 덮어쓰지 않습니다. 외부 공개 환경에서는 `CORS_ORIGINS`와 `VITE_API_BASE_URL`이 실제 접속 주소를 가리키도록 확인하세요.
+
 ## EC2에서 JAsset과 함께 실행
 
 JAsset과 같은 EC2에서 구동할 때는 포트, DB 접속 문자열, CORS origin, 프론트엔드 API 주소를 Trader Is Training 전용 값으로 분리해야 합니다. 아래 값은 예시이며, EC2에서 이미 사용 중인 포트와 겹치면 반드시 다른 값으로 변경하세요.
