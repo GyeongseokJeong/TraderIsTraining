@@ -1,3 +1,9 @@
+"""Central SQLAlchemy model registry.
+
+Register every new feature model in this module so ORM metadata, Alembic
+autogeneration, and session bootstrap all see the same complete model graph.
+"""
+
 from app.features.candles.models import Candle
 from app.features.challenges.models import ChallengeTemplate
 from app.features.equity_snapshots.models import EquitySnapshot
