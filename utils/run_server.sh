@@ -69,7 +69,7 @@ start_postgres() {
 
 run_migrations() {
   log "Running database migrations"
-  (cd "${BACKEND_DIR}" && .venv/bin/alembic upgrade head)
+  (cd "${BACKEND_DIR}" && CORS_ORIGINS="${CORS_ORIGINS_VALUE}" .venv/bin/alembic upgrade head)
 }
 
 start_backend() {
