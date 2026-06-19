@@ -11,6 +11,7 @@ BACKEND_PORT="${BACKEND_PORT:-18000}"
 FRONTEND_HOST="${FRONTEND_HOST:-0.0.0.0}"
 FRONTEND_PORT="${FRONTEND_PORT:-15173}"
 API_BASE_URL="${VITE_API_BASE_URL:-http://localhost:${BACKEND_PORT}/api}"
+# CORS_ORIGINS accepts both a JSON array string and a comma-separated string.
 CORS_ORIGINS_VALUE="${CORS_ORIGINS:-[\"http://localhost:${FRONTEND_PORT}\"]}"
 
 BACKEND_PID=""
