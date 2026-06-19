@@ -7,6 +7,8 @@ Create Date: 2026-06-19
 from collections.abc import Sequence
 
 import sqlalchemy as sa
+from sqlalchemy.dialects import postgresql
+
 from alembic import op
 
 revision: str = "0001_create_base_tables"
@@ -16,10 +18,10 @@ depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
-    timeframe = sa.Enum("MINUTE_1", "MINUTE_5", "MINUTE_15", "MINUTE_60", "MINUTE_240", "DAY", name="timeframe")
-    status = sa.Enum("SETUP", "RUNNING", "FINISHED", name="training_session_status")
-    mode = sa.Enum("PERSONAL_REVIEW", name="training_session_mode")
-    side = sa.Enum("BUY", "SELL", name="trade_side")
+    timeframe = postgresql.ENUM("MINUTE_1", "MINUTE_5", "MINUTE_15", "MINUTE_60", "MINUTE_240", "DAY", name="timeframe", create_type=False)
+    status = postgresql.ENUM("SETUP", "RUNNING", "FINISHED", name="training_session_status", create_type=False)
+    mode = postgresql.ENUM("PERSONAL_REVIEW", name="training_session_mode", create_type=False)
+    side = postgresql.ENUM("BUY", "SELL", name="trade_side", create_type=False)
     timeframe.create(op.get_bind(), checkfirst=True)
     status.create(op.get_bind(), checkfirst=True)
     mode.create(op.get_bind(), checkfirst=True)
@@ -50,4 +52,4 @@ def downgrade() -> None:
     op.drop_table("markets")
     op.drop_table("users")
     for enum_name in ["trade_side", "training_session_mode", "training_session_status", "timeframe"]:
-        sa.Enum(name=enum_name).drop(op.get_bind(), checkfirst=True)
+        postgresql.ENUM(name=enum_name).drop(op.get_bind(), checkfirst=True)
