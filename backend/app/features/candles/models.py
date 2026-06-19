@@ -6,6 +6,7 @@ from sqlalchemy import DateTime, Enum, Index, Numeric, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base
+from app.db.enums import enum_values
 from app.db.timestamps import TimestampMixin
 from app.features.candles.enums import Timeframe
 
@@ -19,7 +20,7 @@ class Candle(Base, TimestampMixin):
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     market_code: Mapped[str] = mapped_column(String(20), index=True)
-    timeframe: Mapped[Timeframe] = mapped_column(Enum(Timeframe, name="timeframe"), index=True)
+    timeframe: Mapped[Timeframe] = mapped_column(Enum(Timeframe, name="timeframe", values_callable=enum_values), index=True)
     candle_time_utc: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
     candle_time_kst: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     open: Mapped[Decimal] = mapped_column(Numeric(28, 10))

@@ -48,6 +48,7 @@ uvicorn app.main:app --reload
 
 ```bash
 cd frontend
+cp .env.example .env
 npm install
 npm run dev
 ```
@@ -74,7 +75,7 @@ npm run build
 
 ## 환경 변수
 
-루트 `.env.example` 참고:
+백엔드는 루트 `.env.example`을 참고하고, 프론트엔드는 `frontend/.env.example`을 참고합니다:
 
 - `DATABASE_URL`: PostgreSQL 접속 문자열
 - `CORS_ORIGINS`: 허용할 프론트엔드 origin 목록

@@ -6,6 +6,7 @@ from sqlalchemy import Boolean, DateTime, Enum, Numeric, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base
+from app.db.enums import enum_values
 from app.features.candles.enums import Timeframe
 
 
@@ -14,7 +15,7 @@ class ChallengeTemplate(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     market_code: Mapped[str] = mapped_column(String(20))
-    timeframe: Mapped[Timeframe] = mapped_column(Enum(Timeframe, name="timeframe"))
+    timeframe: Mapped[Timeframe] = mapped_column(Enum(Timeframe, name="timeframe", values_callable=enum_values))
     start_time_utc: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     end_time_utc: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     initial_capital: Mapped[Decimal] = mapped_column(Numeric(28, 10))
