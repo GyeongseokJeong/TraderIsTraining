@@ -15,6 +15,11 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest>=8.0.0", "pytest-asyncio>=0.23.0", "ruff>=0.5.0"]
 
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
+exclude = ["alembic*"]
+
 [tool.pytest.ini_options]
 testpaths = ["app/tests"]
 pythonpath = ["."]
