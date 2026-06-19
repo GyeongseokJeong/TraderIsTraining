@@ -18,10 +18,14 @@ def test_cors_origins_parses_json_array_string() -> None:
     assert settings.cors_origins == ["http://localhost:15173"]
 
 
-def test_cors_origins_parses_comma_separated_string() -> None:
-    settings = Settings(
-        cors_origins="http://localhost:15173, http://127.0.0.1:15173"
-    )
+def test_cors_origins_parses_unquoted_single_origin_array_string() -> None:
+    settings = Settings(cors_origins="[http://localhost:15173]")
+
+    assert settings.cors_origins == ["http://localhost:15173"]
+
+
+def test_cors_origins_parses_unquoted_multiple_origin_array_string() -> None:
+    settings = Settings(cors_origins="[http://localhost:15173,http://127.0.0.1:15173]")
 
     assert settings.cors_origins == [
         "http://localhost:15173",
@@ -29,10 +33,19 @@ def test_cors_origins_parses_comma_separated_string() -> None:
     ]
 
 
-def test_cors_origins_parses_comma_separated_env_value(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv(
-        "CORS_ORIGINS", "http://localhost:15173,http://127.0.0.1:15173"
-    )
+def test_cors_origins_parses_comma_separated_string() -> None:
+    settings = Settings(cors_origins="http://localhost:15173, http://127.0.0.1:15173")
+
+    assert settings.cors_origins == [
+        "http://localhost:15173",
+        "http://127.0.0.1:15173",
+    ]
+
+
+def test_cors_origins_parses_comma_separated_env_value(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("CORS_ORIGINS", "http://localhost:15173,http://127.0.0.1:15173")
 
     settings = Settings()
 
@@ -42,6 +55,18 @@ def test_cors_origins_parses_comma_separated_env_value(monkeypatch: pytest.Monke
     ]
 
 
+def test_cors_origins_parses_unquoted_single_origin_env_value(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("CORS_ORIGINS", "[http://localhost:15173]")
+
+    settings = Settings()
+
+    assert settings.cors_origins == ["http://localhost:15173"]
+
+
 def test_cors_origins_rejects_invalid_json_array_string() -> None:
-    with pytest.raises(ValidationError, match="JSON array string or a comma-separated string"):
+    with pytest.raises(
+        ValidationError, match="JSON array string or a comma-separated string"
+    ):
         Settings(cors_origins='["http://localhost:15173"')
