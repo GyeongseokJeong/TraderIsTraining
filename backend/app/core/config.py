@@ -15,7 +15,9 @@ class Settings(BaseSettings):
     upbit_request_interval_seconds: float = 0.12
     upbit_max_retries: int = 3
 
-    model_config = SettingsConfigDict(env_file=".env", env_nested_delimiter="__")
+    model_config = SettingsConfigDict(
+        env_file=".env", env_nested_delimiter="__", extra="ignore"
+    )
 
 
 @lru_cache
