@@ -11,7 +11,10 @@ BACKEND_PORT="${BACKEND_PORT:-18000}"
 FRONTEND_HOST="${FRONTEND_HOST:-0.0.0.0}"
 FRONTEND_PORT="${FRONTEND_PORT:-15173}"
 API_BASE_URL="${VITE_API_BASE_URL:-http://localhost:${BACKEND_PORT}/api}"
-# CORS_ORIGINS accepts both a JSON array string and a comma-separated string.
+# CORS_ORIGINS accepts a JSON array string (for example, ["http://localhost:15173"])
+# and a comma-separated string (for example, http://localhost:15173,http://127.0.0.1:15173).
+# When exporting JSON directly in a shell, wrap the whole value in single quotes
+# so the inner JSON quotes are not stripped by shell processing.
 CORS_ORIGINS_VALUE="${CORS_ORIGINS:-[\"http://localhost:${FRONTEND_PORT}\"]}"
 
 BACKEND_PID=""

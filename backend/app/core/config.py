@@ -29,9 +29,11 @@ class Settings(BaseSettings):
                 try:
                     parsed_value = json.loads(stripped_value)
                 except json.JSONDecodeError as exc:
-                    raise ValueError(
-                        "CORS_ORIGINS must be a JSON array string or a comma-separated string."
-                    ) from exc
+                    parsed_value = cls._parse_unquoted_origin_list(stripped_value)
+                    if parsed_value is None:
+                        raise ValueError(
+                            "CORS_ORIGINS must be a JSON array string or a comma-separated string."
+                        ) from exc
 
                 if not isinstance(parsed_value, list):
                     raise ValueError(
@@ -39,9 +41,25 @@ class Settings(BaseSettings):
                     )
                 return parsed_value
 
-            return [origin.strip() for origin in stripped_value.split(",") if origin.strip()]
+            return [
+                origin.strip() for origin in stripped_value.split(",") if origin.strip()
+            ]
 
         return value
+
+    @staticmethod
+    def _parse_unquoted_origin_list(value: str) -> list[str] | None:
+        if not value.endswith("]"):
+            return None
+
+        inner_value = value[1:-1]
+        origins = [
+            origin.strip() for origin in inner_value.split(",") if origin.strip()
+        ]
+        if not origins:
+            return None
+
+        return origins
 
     model_config = SettingsConfigDict(
         env_file=".env", env_nested_delimiter="__", extra="ignore"
